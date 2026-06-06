@@ -1,0 +1,114 @@
+Hey! Tumhe `.env` file mil gayi hai jisme Supabase URL aur ANON_KEY hai. 
+Database ke tables ko direct access karne ke bajay, hum saari cheezein "RPC" 
+(Remote Procedure Calls) ke throgh handle kar rahe hain security ke liye.
+
+Tumhe JavaScript/TypeScript mein direct `supabase.rpc('function_name', { p_payload: { ... } })` use karna hai.
+
+Niche saare functions, unka use-case aur code examples diye hain:
+
+------------------------------------------------------------------------
+1. CLIENT ENQUIRY SUBMIT KARNA (Public Form Ke Liye)
+------------------------------------------------------------------------
+👉 KAB USE KARNA HAI: Jab website par koi normal visitor/client contact form ya enquiry form bharega.
+👉 FUNCTION NAME: submit_client_enquiry_json
+
+💡 NOTE: CA ki asli User ID ko chhupane ke liye hum public frontend par 'ca_mask_id' (UUID) use kar rahe hain. 
+
+📌 Code Example:
+const { data, error } = await supabase.rpc('submit_client_enquiry_json', {
+  p_payload: {
+    ca_mask_id: "123e4567-e89b-12d3-a456-426614174000", // CA ka mask ID
+    name: "Rahul Sharma",
+    contact_number: "9876543210", // Kam se kam 10 digits compulsory hai
+    email: "rahul@example.com",    // Optional
+    service_id: null,              // Optional (Agar kisi specific service ke liye hai)
+    message: "I want to file my ITR" // Optional
+  }
+});
+
+// Response Format:
+// Success: { success: true, message: 'Enquiry successfully submit ho gayi hai!', enquiry_id: '...' }
+// Fail: { success: false, message: 'Error message yahan dikhega' }
+
+
+------------------------------------------------------------------------
+2. ADMIN ENQUIRIES FETCH KARNA (Dashboard Ke Liye)
+------------------------------------------------------------------------
+👉 KAB USE KARNA HAI: Jab CA login karke apne admin dashboard par aayega aur dekhna chahega ki use kis-kis ne enquiry bheji hai.
+👉 FUNCTION NAME: get_admin_enquiries_json
+
+💡 NOTE: Isko call karne se pehle user ka log in (authenticated) hona zaroori hai, aur uske metadata mein role 'admin' hona chahiye. Pagination ke liye 'limit' aur 'offset' bhejna hai.
+
+📌 Code Example:
+const { data, error } = await supabase.rpc('get_admin_enquiries_json', {
+  p_payload: {
+    limit: 20,  // Ek baar mein kitne records chahiye (Default 20)
+    offset: 0   // Skip karne ke liye (Page 1 ke liye 0, Page 2 ke liye 20, etc.)
+  }
+});
+
+// Response Format:
+// Success: { success: true, data: [ { id, name, contact_number, message, ... }, ... ] }
+
+
+------------------------------------------------------------------------
+3. BLOGS MANAGEMENT (CREATE, READ, UPDATE, SOFT_DELETE)
+------------------------------------------------------------------------
+👉 KAB USE KARNA HAI: Admin dashboard mein blogs ko manage karne ke liye. Ek hi function se saare CRUD operations honge, bas 'action' ka naam badalna hai.
+👉 FUNCTION NAME: manage_blogs_json
+
+💡 NOTE: Iske liye bhi user ka login hona zaroori hai.
+
+A) BLOG CREATE KARNA:
+--------------------
+const { data, error } = await supabase.rpc('manage_blogs_json', {
+  p_payload: {
+    action: "CREATE",
+    title: "How to save Income Tax in 2026", // Title se 'slug' auto-generate hoga
+    content: "Main body content of the blog...",
+    summary: "Short summary for preview", // Optional
+    status: "Draft" // 'Draft' ya 'Published' (Published karoge toh date auto set ho jayegi)
+  }
+});
+
+B) BLOGS READ / FETCH KARNA (Dashboard List):
+--------------------------------------------
+const { data, error } = await supabase.rpc('manage_blogs_json', {
+  p_payload: {
+    action: "READ",
+    limit: 20,
+    offset: 0
+  }
+});
+
+C) BLOG UPDATE / EDIT KARNA:
+---------------------------
+const { data, error } = await supabase.rpc('manage_blogs_json', {
+  p_payload: {
+    action: "UPDATE",
+    blog_id: "blog-uuid-here", // Compulsory
+    title: "Updated Title",      // Jo field change karni hai bas wahi bhejo
+    status: "Published"
+  }
+});
+
+D) BLOG SOFT DELETE (Trash mein daalna):
+---------------------------------------
+const { data, error } = await supabase.rpc('manage_blogs_json', {
+  p_payload: {
+    action: "SOFT_DELETE",
+    blog_id: "blog-uuid-here" // Compulsory (Database se delete nahi hoga, filter ho jayega)
+  }
+});
+
+
+========================================================================
+                  ⚠️ IMPORTANT TIPS  ⚠️
+========================================================================
+1. Response Handle Kaise Karein?
+   Supabase ka apna error tabhi aayega agar network issue ho ya function ka naam galat ho. Otherwise, validation errors (jaise contact number chhota hona) hamesha `data.success === false` aur `data.message` mein milenge. 
+   Hamesha code mein check karo:
+   if (data && data.success) { // Do something } else { alert(data.message); }
+
+2. Authentication:
+   Dashboard wale functions (Get Enquiries aur Manage Blogs) ko call karne se pehle ensure kar lena ki `supabase.auth.signInWithPassword()` chal chuka ho, warna 'Authentication required' ka error aayega.

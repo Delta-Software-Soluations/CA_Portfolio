@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Blog Insights | CA Services</title>
+  <meta name="description" content="Practical tax, audit, compliance, and business advisory insights from CA Services." />
+  <link rel="canonical" href="<%= siteUrl %>/blogs" />
+  <meta property="og:title" content="Blog Insights | CA Services" />
+  <meta property="og:description" content="Read practical articles on taxation, audit, registration, and business advisory." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="<%= siteUrl %>/blogs" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body data-supabase-url="<%= supabase?.url || '' %>" data-supabase-anon-key="<%= supabase?.anonKey || '' %>">
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <h1>CA Services</h1>
+        <p class="tag">Professional Financial, Taxation, Audit & Compliance Solutions</p>
+      </div>
+      <button class="menu-btn" aria-label="Open menu">☰</button>
+      <nav class="main-nav">
+        <a href="/" class="nav-pill">Home</a>
+        <a href="/services" class="nav-pill">Services</a>
+        <a href="/blogs" class="nav-pill" aria-current="page">Blogs</a>
+        <a href="/contact" class="nav-pill">Contact</a>
+      </nav>
+      <nav class="mobile-nav" aria-hidden="true">
+        <a href="/">Home</a>
+        <a href="/services">Services</a>
+        <a href="/blogs">Blogs</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="blog-hero reveal-card">
+      <span class="eyebrow">Insights</span>
+      <h2>Simple, useful articles for owners who want cleaner compliance and better decisions.</h2>
+      <p>These posts can be managed from the admin page. If Supabase is connected, the same content can be stored through your blog RPC.</p>
+      <div class="blog-hero-actions">
+        <a class="btn primary" href="/contact#lead-form">Ask a CA</a>
+        <a class="btn" href="/admin/blogs">Admin Blog Page</a>
+      </div>
+    </section>
+
+    <section class="blog-grid">
+      <% if (blogs.length) { %>
+        <% blogs.forEach(function(blog){ %>
+          <article class="blog-card reveal-card">
+            <div class="blog-card-top">
+              <span class="blog-chip"><%= blog.category %></span>
+              <span class="blog-date"><%= new Date(blog.publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }) %></span>
+            </div>
+            <h3><a href="/blogs/<%= blog.slug %>"><%= blog.title %></a></h3>
+            <p><%= blog.summary || blog.content.slice(0, 160) %></p>
+            <a class="blog-link" href="/blogs/<%= blog.slug %>">Read More</a>
+          </article>
+        <% }) %>
+      <% } else { %>
+        <div class="blog-empty reveal-card">
+          <h3>No published blog posts yet.</h3>
+          <p>Add posts from the admin page after connecting Supabase.</p>
+        </div>
+      <% } %>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">&copy; <%= new Date().getFullYear() %> CA Services</div>
+  </footer>
+  <script src="/js/main.js"></script>
+</body>
+</html>
