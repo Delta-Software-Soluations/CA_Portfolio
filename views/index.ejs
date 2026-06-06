@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Expert Financial & Legal Advisory for Your Business Growth | CA Services</title>
+  <meta name="description" content="Professional CA firm for financial advisory, taxation, audit, registration, and compliance services. Book a consultation for tailored business support." />
+  <meta name="keywords" content="CA firm, financial advisory, tax consultancy, audit services, company registration, GST, ITR filing, business compliance" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="<%= siteUrl %>/" />
+  <meta property="og:title" content="Expert Financial & Legal Advisory for Your Business Growth" />
+  <meta property="og:description" content="Professional CA firm providing financial, tax, audit, registration, and compliance support for growing businesses." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="<%= siteUrl %>/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Expert Financial & Legal Advisory for Your Business Growth" />
+  <meta name="twitter:description" content="Book a consultation with our CA firm for financial advisory, taxation, audit, registration, and compliance services." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            corporate: '#0B2545'
+          },
+          boxShadow: {
+            soft: '0 12px 40px rgba(11, 37, 69, 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "CA Services",
+      "url": "<%= siteUrl %>/",
+      "description": "Professional CA firm for financial advisory, taxation, audit, registration, and compliance services.",
+      "areaServed": "India",
+      "serviceType": ["Financial Advisory", "Taxation", "Audit & Assurance", "Registration & Compliance", "Business Advisory"]
+    }
+  </script>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body data-supabase-url="<%= supabase?.url || '' %>" data-supabase-anon-key="<%= supabase?.anonKey || '' %>">
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <h1>CA Services</h1>
+        <p class="tag">Professional Financial, Taxation, Audit & Compliance Solutions</p>
+      </div>
+      <button class="menu-btn" aria-label="Open menu">☰</button>
+      <nav class="main-nav">
+        <a href="#hero" class="nav-pill">Home</a>
+        <a href="/services" class="nav-pill">Services</a>
+        <a href="/blogs" class="nav-pill">Blogs</a>
+        <a href="/contact" class="nav-pill">Contact</a>
+      </nav>
+      <nav class="mobile-nav" aria-hidden="true">
+        <a href="#hero">Home</a>
+        <a href="/services">Services</a>
+        <a href="/blogs">Blogs</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="hero" class="hero hero-premium" aria-labelledby="hero-title">
+      <div class="hero-shell container">
+        <div class="hero-copy">
+          <span class="eyebrow reveal">Trusted CA Firm</span>
+          <h2 id="hero-title" class="reveal">Expert Financial &amp; Legal Advisory for Your Business Growth</h2>
+          <p class="hero-subtitle reveal">A premium, client-focused advisory practice for taxation, audit, compliance, registrations, and strategic financial support.</p>
+
+          <div class="hero-actions reveal">
+            <a class="btn primary" href="/contact#lead-form">Book Consultation</a>
+            <a class="btn hero-secondary" href="/services">Explore Services</a>
+          </div>
+
+          <ul class="hero-highlights reveal" aria-label="Key benefits">
+            <li>Clear advisory process</li>
+            <li>Responsive support</li>
+            <li>Business-first thinking</li>
+          </ul>
+        </div>
+
+        <aside id="quick-enquiry" class="hero-form-card reveal-card" aria-label="Quick enquiry form">
+          <div class="hero-form-top">
+            <span class="eyebrow eyebrow-inverse">Quick Enquiry Form</span>
+            <h3>Share your details and get a prompt consultation</h3>
+            <p>Tell us what you need and we’ll guide you with the right service and next steps.</p>
+          </div>
+
+          <% if (submitted) { %>
+            <div class="form-success" role="status">Thanks! Your inquiry has been received. We'll contact you soon.</div>
+          <% } %>
+          <% if (error) { %>
+            <div class="form-error" role="alert">Please enter your full name and a valid 10-digit phone number.</div>
+          <% } %>
+          <% if (errorMsg) { %>
+            <div class="form-error" role="alert"><strong>Error:</strong> <%= errorMsg %></div>
+          <% } %>
+
+          <form class="inquiry-form hero-inquiry-form" action="/inquiry" method="POST" novalidate>
+            <div class="form-row two-up">
+              <label class="field">
+                <span>Full Name *</span>
+                <input type="text" name="name" placeholder="Your name" required />
+              </label>
+              <label class="field">
+                <span>Phone *</span>
+                <input type="tel" name="phone" placeholder="9876543210" inputmode="numeric" pattern="^[0-9]{10}$" minlength="10" maxlength="10" required autocomplete="tel" />
+              </label>
+            </div>
+
+            <div class="form-row two-up">
+              <label class="field">
+                <span>Email</span>
+                <input type="email" name="email" placeholder="name@example.com" />
+              </label>
+              <label class="field">
+                <span>Company / Business</span>
+                <input type="text" name="company" placeholder="Optional" />
+              </label>
+            </div>
+
+            <div class="form-row">
+              <label class="field">
+                <span>Service</span>
+                <select name="service">
+                  <option value="">Select a service</option>
+                  <% services.forEach(function(s){ %>
+                    <option value="<%= s.title %>"><%= s.title %></option>
+                  <% }) %>
+                  <option value="Other">Other</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="form-row">
+              <label class="field">
+                <span>Requirement / Message</span>
+                <textarea name="message" rows="4" placeholder="Tell us your need in short"></textarea>
+              </label>
+            </div>
+
+            <div class="form-actions hero-form-actions">
+              <button class="btn primary submit-btn" type="submit">
+                <span>Send Inquiry</span>
+                <span class="spinner" aria-hidden="true"></span>
+              </button>
+              <p class="form-note">We have received <strong><%= inquiryCount %></strong> inquiry(ies) so far.</p>
+            </div>
+          </form>
+        </aside>
+      </div>
+    </section>
+
+    <section id="services" class="bg-slate-50 py-16 sm:py-20">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#0B2545]">Services</p>
+          <h3 class="mt-3 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">A focused service matrix for modern businesses</h3>
+          <p class="mt-4 text-base leading-7 text-slate-600">Clean, corporate service cards designed for quick scanning, easy navigation, and direct inquiry routing.</p>
+        </div>
+
+        <div class="mt-12 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          <% serviceGroups.forEach(function(group){ %>
+            <article class="group rounded-3xl border border-slate-200 bg-white p-6 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-lg">
+              <div class="flex items-start gap-4">
+                <div class="flex h-14 w-14 flex-none items-center justify-center rounded-2xl bg-slate-50 text-[#0B2545] ring-1 ring-slate-100 transition duration-300 group-hover:bg-[#0B2545] group-hover:text-white">
+                  <span class="inline-flex h-7 w-7 items-center justify-center [&>svg]:h-7 [&>svg]:w-7"> <%- group.icon %> </span>
+                </div>
+                <div class="min-w-0">
+                  <h4 class="text-lg font-semibold text-slate-900"><%= group.title %></h4>
+                  <p class="mt-1 text-sm leading-6 text-slate-600"><%= group.subtitle %></p>
+                </div>
+              </div>
+
+              <ul class="mt-5 space-y-2 text-sm text-slate-700">
+                <% group.items.slice(0,3).forEach(function(item){ %>
+                  <li class="flex items-start gap-3">
+                    <span class="mt-1 inline-block h-2 w-2 flex-none rounded-full bg-[#0B2545]"></span>
+                    <span><%= item.title %></span>
+                  </li>
+                <% }) %>
+              </ul>
+
+              <div class="mt-6 flex items-center justify-between gap-3 border-t border-slate-100 pt-5">
+                <a href="/services#<%= group.key %>" class="inline-flex items-center text-sm font-semibold text-[#0B2545] transition hover:text-slate-900">
+                  Learn More
+                  <span aria-hidden="true" class="ml-2 transition group-hover:translate-x-1">→</span>
+                </a>
+                <span class="text-xs font-medium uppercase tracking-[0.2em] text-slate-400"><%= group.items.length %> services</span>
+              </div>
+            </article>
+          <% }) %>
+        </div>
+
+        <div class="mt-10 text-center">
+          <a class="inline-flex items-center rounded-full bg-[#0B2545] px-6 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-[#123f74]" href="/services">View All Services</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact container">
+      <div class="contact-shell contact-shell-minimal">
+        <div class="contact-copy reveal-card">
+          <span class="eyebrow">Client Support</span>
+          <h3>Dedicated advisory support for every stage of your business journey</h3>
+          <p>We help with compliance, planning, registration, tax filing, and strategic decision-making through a clean, professional process.</p>
+        </div>
+        <div class="contact-points reveal-card">
+          <div>
+            <strong>Fast Response</strong>
+            <p>Prompt follow-up on every enquiry.</p>
+          </div>
+          <div>
+            <strong>Professional Guidance</strong>
+            <p>Clear next steps from experienced advisors.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="blog-preview container">
+      <div class="blog-preview-head reveal-card">
+        <span class="eyebrow">Latest Insights</span>
+        <h3>Short, practical blog posts for founders and businesses.</h3>
+        <p>These posts can be managed from the admin page once Supabase is connected.</p>
+      </div>
+      <div class="blog-grid blog-grid-home">
+        <% recentBlogs.forEach(function(blog){ %>
+          <article class="blog-card reveal-card">
+            <div class="blog-card-top">
+              <span class="blog-chip"><%= blog.category %></span>
+            </div>
+            <h3><a href="/blogs/<%= blog.slug %>"><%= blog.title %></a></h3>
+            <p><%= blog.summary %></p>
+          </article>
+        <% }) %>
+      </div>
+      <div class="blog-preview-actions">
+        <a class="btn primary" href="/blogs">View All Blogs</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">&copy; <%= new Date().getFullYear() %> CA Services</div>
+  </footer>
+  <script src="/js/main.js"></script>
+</body>
+</html>

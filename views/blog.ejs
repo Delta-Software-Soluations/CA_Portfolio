@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title><%= blog ? blog.title : 'Blog Not Found' %> | CA Services</title>
+  <meta name="description" content="<%= blog ? (blog.summary || 'Read useful CA and business advisory insights.') : 'Blog article not found.' %>" />
+  <link rel="canonical" href="<%= siteUrl %>/blogs<%= blog ? '/' + blog.slug : '' %>" />
+  <meta property="og:title" content="<%= blog ? blog.title : 'Blog Not Found' %>" />
+  <meta property="og:description" content="<%= blog ? (blog.summary || 'Read practical advisory insights.') : 'Article not found.' %>" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="<%= siteUrl %>/blogs<%= blog ? '/' + blog.slug : '' %>" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body data-supabase-url="<%= supabase?.url || '' %>" data-supabase-anon-key="<%= supabase?.anonKey || '' %>">
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <h1>CA Services</h1>
+        <p class="tag">Professional Financial, Taxation, Audit & Compliance Solutions</p>
+      </div>
+      <button class="menu-btn" aria-label="Open menu">☰</button>
+      <nav class="main-nav">
+        <a href="/" class="nav-pill">Home</a>
+        <a href="/services" class="nav-pill">Services</a>
+        <a href="/blogs" class="nav-pill">Blogs</a>
+        <a href="/contact" class="nav-pill">Contact</a>
+      </nav>
+      <nav class="mobile-nav" aria-hidden="true">
+        <a href="/">Home</a>
+        <a href="/services">Services</a>
+        <a href="/blogs">Blogs</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container blog-page">
+    <% if (!blog) { %>
+      <section class="blog-hero reveal-card">
+        <span class="eyebrow">404</span>
+        <h2>Blog post not found.</h2>
+        <p>The article you opened is unavailable or still not published.</p>
+        <a class="btn primary" href="/blogs">Back to Blogs</a>
+      </section>
+    <% } else { %>
+      <article class="blog-detail reveal-card">
+        <span class="blog-chip"><%= blog.category %></span>
+        <h2><%= blog.title %></h2>
+        <p class="blog-detail-meta"><%= new Date(blog.publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }) %> · <%= blog.status %></p>
+        <p class="blog-detail-summary"><%= blog.summary %></p>
+        <div class="blog-detail-body"><%= blog.content %></div>
+      </article>
+    <% } %>
+
+    <section class="blog-related">
+      <h3>More posts</h3>
+      <div class="blog-grid blog-grid-related">
+        <% recentBlogs.forEach(function(item){ %>
+          <article class="blog-card reveal-card">
+            <div class="blog-card-top">
+              <span class="blog-chip"><%= item.category %></span>
+            </div>
+            <h3><a href="/blogs/<%= item.slug %>"><%= item.title %></a></h3>
+            <p><%= item.summary %></p>
+          </article>
+        <% }) %>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">&copy; <%= new Date().getFullYear() %> CA Services</div>
+  </footer>
+  <script src="/js/main.js"></script>
+</body>
+</html>

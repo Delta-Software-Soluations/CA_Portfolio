@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Our Services - CA Services</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body data-supabase-url="<%= supabase?.url || '' %>" data-supabase-anon-key="<%= supabase?.anonKey || '' %>">
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1>Our Services</h1>
+      <nav class="page-nav" aria-label="Page navigation">
+        <a href="/" class="nav-pill">Home</a>
+        <a href="/services" class="nav-pill" aria-current="page">Services</a>
+        <a href="/blogs" class="nav-pill">Blogs</a>
+        <a href="/contact" class="nav-pill">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="services-intro reveal-card">
+      <span class="eyebrow">Our Services</span>
+      <h2>Organized, professional support across finance, taxation, audit, registration, and advisory.</h2>
+      <p>Each category is arranged for easy browsing, with clear service details and smooth motion for a more polished experience.</p>
+      <div class="services-stats">
+        <div><strong><%= services.length %>+</strong><span>Services</span></div>
+        <div><strong><%= serviceGroups.length %></strong><span>Categories</span></div>
+        <div><strong>Fast</strong><span>Inquiry response</span></div>
+      </div>
+    </section>
+
+    <section class="service-filters reveal-card" aria-label="Service category filters">
+      <button class="filter-pill active" type="button" data-filter="all">All Services</button>
+      <% serviceGroups.forEach(function(group){ %>
+        <button class="filter-pill" type="button" data-filter="<%= group.key %>"><%= group.title %></button>
+      <% }) %>
+    </section>
+
+    <% serviceGroups.forEach(function(group, groupIndex){ %>
+      <section id="<%= group.key %>" class="service-group reveal-card" data-group="<%= group.key %>" style="--group-delay:<%= groupIndex %>; scroll-margin-top: 7rem;">
+        <div class="service-group-head">
+          <span class="group-icon"><%- group.icon %></span>
+          <div>
+            <span class="group-label"><%= group.key.replace(/-/g, ' ').toUpperCase() %></span>
+            <h3><%= group.title %></h3>
+            <p><%= group.subtitle %></p>
+          </div>
+        </div>
+
+        <ul class="services-list cards-grid">
+          <% group.items.forEach(function(s, index){ %>
+            <li class="service-tile" style="--i:<%= index %>">
+              <article class="service-card" tabindex="0" data-id="<%= s.id %>">
+                <header class="card-head">
+                  <span class="card-mark"><%= s.title.charAt(0) %></span>
+                  <h4><%= s.title %></h4>
+                  <div class="meta"><%= s.short %></div>
+                </header>
+                <div class="card-body">
+                  <p class="summary"><%= s.short %></p>
+                  <div class="details"><%= s.details %></div>
+                </div>
+                <footer class="card-foot">
+                    <button class="btn open-detail" type="button" data-title="<%= s.title.replace(/\"/g,'&quot;') %>" data-details="<%= s.details.replace(/\"/g,'&quot;') %>">View Details</button>
+                  <a class="btn" href="/#contact">Contact</a>
+                </footer>
+              </article>
+            </li>
+          <% }) %>
+        </ul>
+      </section>
+    <% }) %>
+
+    <!-- Service detail modal -->
+    <div id="service-modal" class="service-modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="service-modal-backdrop" data-close></div>
+      <div class="service-modal-panel" role="document">
+        <button class="service-modal-close" aria-label="Close">✕</button>
+        <h3 id="service-modal-title"></h3>
+        <div id="service-modal-body"></div>
+        <div class="service-modal-actions"><a class="btn primary" href="/contact#lead-form">Enquire</a></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">&copy; <%= new Date().getFullYear() %> CA Services</div>
+  </footer>
+  <script src="/js/main.js"></script>
+</body>
+</html>
